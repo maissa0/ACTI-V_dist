@@ -26,9 +26,9 @@ public class MiniProjetJeeApplication {
     public CommandLineRunner commandLineRunner(EmployeeRepo service) {
         return args -> {
             Employee employee = Employee.builder()
-                    .email("elmessbahiyoussef@gmail.com")
-                    .firstName("Youssef")
-                    .lastName("Elmessbahi")
+                    .email("dali@gmail.com")
+                    .firstName("dali")
+                    .lastName("dali")
                     .jobTitle("Software Engineer")
                     .phone("0666666666")
                     .password(passwordEncoder.encode("admin"))
