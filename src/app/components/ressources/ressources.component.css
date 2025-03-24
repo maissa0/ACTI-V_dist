@@ -1,0 +1,87 @@
+/* Add this to your ressources.component.css or styles.css */
+.container {
+  margin: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 24px;
+  color: #3f51b5;
+}
+
+.filters {
+  display: flex;
+  gap: 20px;
+}
+
+.search-bar {
+  padding: 8px;
+  font-size: 14px;
+  width: 200px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+select {
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.custom-table th,
+.custom-table td {
+  padding: 12px 20px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.custom-table th {
+  background-color: #3f51b5;
+  color: white;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.custom-table td {
+  background-color: #f9f9f9;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+}
+
+.custom-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.custom-table tr {
+  transition: background-color 0.3s ease;
+}
+
+.download-btn {
+  background-color: #4caf50;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.download-btn:hover {
+  background-color: #45a049;
+}
+
+
+  
