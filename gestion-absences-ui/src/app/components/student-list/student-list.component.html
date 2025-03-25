@@ -1,0 +1,50 @@
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+  <div class="p-4 flex justify-between items-center bg-gray-50">
+    <h2 class="text-xl font-semibold text-gray-800">Liste des étudiants</h2>
+    <a routerLink="/students/add" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+      Ajouter un étudiant
+    </a>
+  </div>
+
+  <ng-container *ngIf="loading">
+    <div class="p-4 text-center">
+      <p>Loading students...</p>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="error">
+    <div class="p-4 text-center text-red-600">
+      <p>{{ error }}</p>
+      <button (click)="loadStudents()" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+        Retry
+      </button>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!loading && !error">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+      <tr>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prénom</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date de naissance</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+      </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+      <tr *ngFor="let student of students">
+        <td class="px-6 py-4 whitespace-nowrap">{{ student.id }}</td>
+        <td class="px-6 py-4 whitespace-nowrap">{{ student.prenom }}</td>
+        <td class="px-6 py-4 whitespace-nowrap">{{ student.nom }}</td>
+        <td class="px-6 py-4 whitespace-nowrap">{{ student.dateNaissance | date }}</td>
+        <td class="px-6 py-4 whitespace-nowrap">
+          <a [routerLink]="['/students/edit', student.id]" class="text-indigo-600 hover:text-indigo-900 mr-4">Modifier</a>
+          <button (click)="deleteStudent(student.id)" class="text-red-600 hover:text-red-900">Supprimer</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </ng-container>
+</div>
+

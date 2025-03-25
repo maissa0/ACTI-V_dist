@@ -1,0 +1,51 @@
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+  <div class="p-4 bg-gray-50">
+    <h2 class="text-xl font-semibold text-gray-800">{{isEditMode ? 'Modifier' : 'Ajouter'}} une classe</h2>
+  </div>
+
+  <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+    <span class="block sm:inline">{{ errorMessage }}</span>
+  </div>
+
+  <form [formGroup]="classeForm" (ngSubmit)="onSubmit()" class="p-4">
+    <div class="mb-4">
+      <label for="nom" class="block text-gray-700 text-sm font-bold mb-2">Nom</label>
+      <input
+        type="text"
+        id="nom"
+        formControlName="nom"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        [class.border-red-500]="classeForm.get('nom')?.invalid && classeForm.get('nom')?.touched"
+      >
+      <p *ngIf="classeForm.get('nom')?.invalid && classeForm.get('nom')?.touched" class="text-red-500 text-xs italic">
+        Le nom est requis
+      </p>
+    </div>
+
+    <div class="mb-4">
+      <label for="niveau" class="block text-gray-700 text-sm font-bold mb-2">Niveau</label>
+      <input
+        type="number"
+        id="niveau"
+        formControlName="niveau"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        [class.border-red-500]="classeForm.get('niveau')?.invalid && classeForm.get('niveau')?.touched"
+      >
+      <p *ngIf="classeForm.get('niveau')?.invalid && classeForm.get('niveau')?.touched" class="text-red-500 text-xs italic">
+        Le niveau est requis et doit être supérieur à 0
+      </p>
+    </div>
+
+    <div class="flex items-center justify-between">
+      <button
+        type="submit"
+        [disabled]="!classeForm.valid"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        [class.opacity-50]="!classeForm.valid"
+      >
+        {{isEditMode ? 'Mettre à jour' : 'Ajouter'}} la classe
+      </button>
+      <a routerLink="/classes" class="text-gray-600 hover:text-gray-800">Annuler</a>
+    </div>
+  </form>
+</div>

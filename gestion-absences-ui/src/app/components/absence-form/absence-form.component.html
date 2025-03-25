@@ -1,0 +1,31 @@
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+  <div class="p-4 bg-gray-50 flex justify-between items-center">
+    <h2 class="text-xl font-semibold text-gray-800">{{ isEditMode ? 'Modifier' : 'Ajouter' }} une Absence</h2>
+  </div>
+  <form [formGroup]="absenceForm" (ngSubmit)="onSubmit()" class="p-4">
+    <div class="mb-4">
+      <label for="date" class="block text-sm font-bold text-gray-700 mb-2">Date</label>
+      <input type="date" id="date" formControlName="date" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+    <div class="mb-4">
+      <label for="raison" class="block text-sm font-bold text-gray-700 mb-2">Raison</label>
+      <input type="text" id="raison" formControlName="raison" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+    <div class="mb-4 flex items-center">
+      <input type="checkbox" id="justifiee" formControlName="justifiee" class="mr-2">
+      <label for="justifiee" class="text-sm text-gray-700">Cette absence est-elle justifiée ?</label>
+    </div>
+    <div class="mb-4">
+      <label for="etudiantId" class="block text-sm font-bold text-gray-700 mb-2">Étudiant</label>
+      <select id="etudiantId" formControlName="etudiantId" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="">Sélectionner un étudiant</option>
+        <option *ngFor="let student of students" [value]="student.id">{{ student.prenom }} {{ student.nom }}</option>
+      </select>
+    </div>
+    <div class="flex justify-end">
+      <button type="submit" [disabled]="!absenceForm.valid" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+        {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
+      </button>
+    </div>
+  </form>
+</div>
