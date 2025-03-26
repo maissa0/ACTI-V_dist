@@ -2,6 +2,11 @@
   <div class="header">
     <h2>Ressources Disponibles</h2>
     <div class="filters">
+      <!-- Button to download PDF -->
+      <button mat-button (click)="downloadAllRessourcesPDF()" class="download-btn">
+        Télécharger PDF
+      </button>
+      
       <!-- Search Bar -->
       <input 
         type="text" 
@@ -10,10 +15,11 @@
         placeholder="Rechercher par nom" 
         class="search-bar" 
       />
+      
       <!-- Filter by Type -->
-      <select [(ngModel)]="selectedType" (ngModelChange)="filterByType()">
-        <option value="">Filtrer par Type</option>
-        <option *ngFor="let type of uniqueTypes" [value]="type">{{ type }}</option>
+      <select [(ngModel)]="selectedTypeId" (change)="filterByType()">
+        <option [value]="null">Tous</option>
+        <option *ngFor="let type of types" [value]="type.id">{{ type.nom }}</option>
       </select>
     </div>
   </div>
@@ -23,23 +29,17 @@
       <tr>
         <th>Nom</th>
         <th>Quantité</th>
-        <th>Action</th> <!-- Replace 'Type' with Action for the button -->
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let ressource of filteredRessources">
         <td>{{ ressource.nom }}</td>
         <td>{{ ressource.quantite }}</td>
-        <td>
-          <!-- Button to download PDF -->
-          <button mat-button (click)="downloadPDF(ressource)" class="download-btn">
-            Télécharger PDF
-          </button>
-        </td>
       </tr>
     </tbody>
   </table>
 </div>
+
 
 
   

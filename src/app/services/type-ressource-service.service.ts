@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class TypeRessourceServiceService {
+export class TypeRessourceService {
   private apiUrl = 'http://localhost:8086/TypeRessource'; // Your Spring Boot API URL
 
 

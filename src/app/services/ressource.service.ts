@@ -46,7 +46,7 @@ export class RessourceService {
   
   }
   getRessourcesByType(typeId: number): Observable<Ressource[]> {
-    return this.http.get<Ressource[]>(`${this.apiUrl}/filter?typeId=${typeId}`);
+    return this.http.get<Ressource[]>(`${this.apiUrl}/type/${typeId}`);
   }
   
 }
