@@ -12,7 +12,7 @@ import lombok.*;
 public class evaluationVolontaire {
     @Id
     private String id;
-    private String volontaireId;
+
     private int note;
     private String commentaire;
 }

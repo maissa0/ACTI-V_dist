@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.IntSummaryStatistics;
+import java.util.IntSummaryStatistics;
 
 @Service
 public class EvaluationEvenementService implements IevaluationService{

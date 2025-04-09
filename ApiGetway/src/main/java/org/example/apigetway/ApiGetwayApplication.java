@@ -18,10 +18,10 @@ public class ApiGetwayApplication {
 	@Bean
 	public RouteLocator getwayRoutes(RouteLocatorBuilder builder){
 		return builder.routes()
-			 /*id adi */	.route("feedevent",r->r.path("/feedevent/**") //fl controllet
-						.uri("lb://EVALUATIONEVENEMENT")) // esm microservice
-				.route("feedvolontaire",r->r.path("/feedvolont/**")
-						.uri("lb://EVALUATION-VOLONTAIRE-SERVICE"))
+			 /*id adi */	.route("id",r->r.path("/evaluations/**") //fl controllet
+						.uri("lb://EvaluationEvenement")) // esm microservice
+				.route("id",r->r.path("/evaluationVolontaire/**")
+						.uri("lb://evaluationVolontaire"))
 				.build();
 	}
 }
