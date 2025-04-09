@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-
-
 @Service
 public class evaluationvService {
     @Autowired
@@ -31,7 +29,7 @@ public class evaluationvService {
 
     public evaluationVolontaire updateEvaluation(evaluationVolontaire evaluation) {
         if (repository.existsById(evaluation.getId())) {
-            return repository.save(evaluation);  // Mise à jour si l'ID existe
+            return repository.save(evaluation);
         } else {
             throw new IllegalArgumentException("Évaluation avec l'ID " + evaluation.getId() + " introuvable.");
         }
@@ -44,5 +42,13 @@ public class evaluationvService {
 
     public List<evaluationVolontaire> getAllEvaluations() {
         return repository.findAll();
+    }
+
+    public List<evaluationVolontaire> getEvaluationsByNote(int note) {
+        return repository.findByNote(note);
+    }
+
+    public List<evaluationVolontaire> getEvaluationsOrderedByNoteDesc() {
+        return repository.findAllByOrderByNoteDesc();
     }
 }
