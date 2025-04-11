@@ -16,4 +16,7 @@ public interface MissionInterface {
     Mission updateMission(Long id, Mission mission);
 
     void deleteMission(Long id);
+
+    void assignMissionToEquipe(Long equipeId, Long missionId);
+
 }
