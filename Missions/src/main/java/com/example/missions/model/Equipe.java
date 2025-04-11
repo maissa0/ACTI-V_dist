@@ -1,5 +1,6 @@
 package com.example.missions.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,8 +20,7 @@ public class Equipe {
 
     private String nomEquipe;
 
-
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "mission_id")
     private Mission mission;
 

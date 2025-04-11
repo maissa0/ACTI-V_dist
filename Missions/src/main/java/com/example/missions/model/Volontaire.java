@@ -1,5 +1,6 @@
 package com.example.missions.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,10 +26,10 @@ public class Volontaire {
 
     private String adresse;
 
+@JsonIgnore
     @ManyToMany(mappedBy = "membres")
     private List<Equipe> equipes;
 
-    @OneToMany(mappedBy = "responsable")
-    private List<Equipe> equipesDirigees;
+
 }
 

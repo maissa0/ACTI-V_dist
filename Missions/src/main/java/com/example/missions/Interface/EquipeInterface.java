@@ -17,5 +17,9 @@ public interface EquipeInterface {
     Equipe updateEquipe(Long id, Equipe equipe);
 
     void deleteEquipe(Long id);
+
+    Equipe assignVolontaireToEquipe(Long equipeId, Long volontaireId);
+
+
 }
 
