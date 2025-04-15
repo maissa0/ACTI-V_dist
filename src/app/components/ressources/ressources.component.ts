@@ -14,7 +14,7 @@ import autoTable from 'jspdf-autotable'; // Importer autoTable
 
 export class RessourcesComponent implements OnInit {
   
-  displayedColumns: string[] = ['nom', 'quantite', 'type']; // No IDs
+  displayedColumns: string[] = ['nom', 'quantite', 'type', 'actions']; // Added 'actions' column
   ressources: any[] = [];
   filteredRessources: any[] = [];
   searchText: string = ''; // Search text
@@ -116,4 +116,23 @@ export class RessourcesComponent implements OnInit {
     doc.save('ressources.pdf');
   }
   
+  deleteRessource(ressource: any): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette ressource ?')) {
+      this.ressourceService.deleteRessource(ressource.id).subscribe({
+        next: () => {
+          // Remove the resource from the arrays
+          this.ressources = this.ressources.filter(r => r.id !== ressource.id);
+          this.filteredRessources = this.filteredRessources.filter(r => r.id !== ressource.id);
+        },
+        error: (error) => {
+          console.error('Erreur lors de la suppression de la ressource:', error);
+        }
+      });
+    }
+  }
+
+  addRessource(): void {
+    // This will be implemented to open a dialog or navigate to add resource page
+    console.log('Add resource clicked');
+  }
 }

@@ -1,0 +1,36 @@
+<div class="profile-edit">
+  <h1>Edit your profile</h1>
+  
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <div class="form-field">
+      <label>Name</label>
+      <input type="text" formControlName="name">
+    </div>
+
+    <div class="form-field">
+      <label>Surname</label>
+      <input type="text" formControlName="Lastname">
+    </div>
+
+    <div class="form-field">
+      <label>Headline</label>
+      <input type="text" formControlName="headline">
+    </div>
+
+    <div class="form-field">
+      <label>Current position</label>
+      <input type="text" formControlName="Email Adress">
+    </div>
+
+    <div class="form-field">
+      <label>Location</label>
+      <input type="text" formControlName="Phone Number">
+    </div>
+
+   
+
+    
+
+    <button type="submit" class="save-btn">Save Profile</button>
+  </form>
+</div>

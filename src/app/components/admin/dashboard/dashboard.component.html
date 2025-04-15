@@ -1,0 +1,152 @@
+<div class="dashboard-container">
+  <!-- Left Sidebar -->
+  <div class="sidebar">
+   
+    
+    <div class="nav-menu">
+      <a (click)="showSection('dashboard')" [class.active]="currentSection === 'dashboard'" class="nav-item">
+        <img src="assets/icons/dashboard.svg" alt="Dashboard">
+        Dashboard
+      </a>
+      <a (click)="showSection('content')" [class.active]="currentSection === 'content'" class="nav-item">
+        <img src="assets/icons/content.svg" alt="Content">
+        Content
+      </a>
+      <a (click)="showSection('analytics')" [class.active]="currentSection === 'analytics'" class="nav-item">
+        <img src="assets/icons/analytics.svg" alt="Analytics">
+        Analytics
+      </a>
+      <a (click)="showSection('likes')" [class.active]="currentSection === 'likes'" class="nav-item">
+        <img src="assets/icons/likes.svg" alt="Likes">
+        Likes
+      </a>
+      <a (click)="showSection('comments')" [class.active]="currentSection === 'comments'" class="nav-item">
+        <img src="assets/icons/comments.svg" alt="Comments">
+        Comments
+      </a>
+    </div>
+
+    <div class="bottom-nav">
+      <a (click)="showSection('profile')" [class.active]="currentSection === 'profile'" class="nav-item">
+        <img src="assets/icons/profile.svg" alt="Profile">
+        Profile
+      </a>
+      <a class="nav-item">
+        <img src="assets/icons/logout.svg" alt="Logout">
+        Logout
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Dashboard Section -->
+    <div *ngIf="currentSection === 'dashboard'">
+      <!-- Header -->
+      <div class="header">
+        <div class="header-title">
+          <img src="assets/icons/dashboard.svg" alt="Dashboard">
+          Dashboard
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card views">
+          <div class="stat-icon">
+            <img src="assets/icons/eye.svg" alt="Views">
+          </div>
+          <div class="stat-label">Total Views</div>
+          <div class="stat-value">18345</div>
+        </div>
+
+        <div class="stat-card users">
+          <div class="stat-icon">
+            <img src="assets/icons/users.svg" alt="Users">
+          </div>
+          <div class="stat-label">Active Users</div>
+          <div class="stat-value">2745</div>
+        </div>
+
+        <div class="stat-card activities">
+          <div class="stat-icon">
+            <img src="assets/icons/activities.svg" alt="Activities">
+          </div>
+          <div class="stat-label">Total Activities</div>
+          <div class="stat-value">1209</div>
+        </div>
+
+        <div class="stat-card vehicles">
+          <div class="stat-icon">
+            <img src="assets/icons/car.svg" alt="Vehicles">
+          </div>
+          <div class="stat-label">Insured Vehicles</div>
+          <div class="stat-value">123</div>
+        </div>
+      </div>
+
+      <!-- Recent Activities -->
+      <div class="recent-section">
+        <div class="section-header">
+          <img src="assets/icons/clock.svg" alt="Recent">
+          Recent Activities
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Section -->
+    <div *ngIf="currentSection === 'profile'" class="profile-section">
+      <div class="header">
+        <div class="header-title">
+          <img src="assets/icons/profile.svg" alt="Profile">
+          Edit your profile
+        </div>
+      </div>
+
+      <div class="profile-edit">
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
+          <div class="form-row">
+            <div class="form-field">
+              <label>Name</label>
+              <input type="text" formControlName="name" placeholder="Enter your name">
+            </div>
+
+            <div class="form-field">
+              <label>Surname</label>
+              <input type="text" formControlName="surname" placeholder="Enter your surname">
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Headline</label>
+            <input type="text" formControlName="headline" placeholder="Your professional headline">
+          </div>
+
+          <div class="form-field">
+            <label>Current position</label>
+            <input type="text" formControlName="currentPosition" placeholder="Your current job position">
+          </div>
+
+          <div class="form-field">
+            <label>Location</label>
+            <input type="text" formControlName="location" placeholder="Your institution or company">
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label>Country</label>
+              <input type="text" formControlName="country" placeholder="Your country">
+            </div>
+
+            <div class="form-field">
+              <label>State/Region</label>
+              <input type="text" formControlName="stateRegion" placeholder="Your state or region">
+            </div>
+          </div>
+
+          <button type="submit" class="save-btn">Save Profile</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
