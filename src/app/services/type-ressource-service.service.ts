@@ -19,4 +19,9 @@ export class TypeRessourceService {
   // Get specific type by ID (optional, if needed)
   getTypeById(id: number): Observable<{ id: number; nom: string }> {
     return this.http.get<{ id: number; nom: string }>(`${this.apiUrl}/${id}`);
-  }}
+  }
+
+  createType(typeData: { nom: string }): Observable<{ id: number; nom: string }> {
+    return this.http.post<{ id: number; nom: string }>(this.apiUrl, typeData);
+  }
+}

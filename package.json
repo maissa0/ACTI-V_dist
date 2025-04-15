@@ -20,8 +20,11 @@
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
+    "google-libphonenumber": "^3.2.40",
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",
+    "ngx-bootstrap": "^10.3.0",
+    "ngx-intl-tel-input": "^17.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

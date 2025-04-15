@@ -3,6 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -48,6 +50,8 @@ import { DashboardComponent } from './components/admin/dashboard/dashboard.compo
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
+    NgxIntlTelInputModule,
+    BsDropdownModule.forRoot(),
     MatTableModule,
     MatToolbarModule,
     MatButtonModule,

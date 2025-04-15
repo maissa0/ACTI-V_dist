@@ -94,6 +94,153 @@
       </div>
     </div>
 
+    <!-- Content Section (Resources) -->
+    <div *ngIf="currentSection === 'content'" class="content-section">
+      <div class="header">
+        <div class="header-title">
+          <img src="assets/icons/content.svg" alt="Content">
+          Ressources Disponibles
+        </div>
+        <div class="actions">
+          <button mat-raised-button (click)="downloadAllRessourcesPDF()" class="download-btn">
+            <mat-icon>download</mat-icon>
+            Télécharger PDF
+          </button>
+          <button mat-raised-button color="primary" (click)="addRessource()">
+            <mat-icon>add</mat-icon>
+            Nouvelle Ressource
+          </button>
+        </div>
+      </div>
+
+      <div class="filters">
+        <mat-form-field appearance="outline">
+          <mat-label>Rechercher par nom</mat-label>
+          <input matInput [(ngModel)]="searchText" (input)="searchRessourceByName()" placeholder="Rechercher...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Filtrer par type</mat-label>
+          <mat-select [(ngModel)]="selectedTypeId" (selectionChange)="filterByType()">
+            <mat-option [value]="null">Tous</mat-option>
+            <mat-option *ngFor="let type of types" [value]="type.id">{{ type.nom }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="resources-table">
+        <table mat-table [dataSource]="filteredRessources" class="mat-elevation-z8">
+          <!-- Name Column -->
+          <ng-container matColumnDef="nom">
+            <th mat-header-cell *matHeaderCellDef> Nom </th>
+            <td mat-cell *matCellDef="let ressource"> {{ressource.nom}} </td>
+          </ng-container>
+
+          <!-- Quantity Column -->
+          <ng-container matColumnDef="quantite">
+            <th mat-header-cell *matHeaderCellDef> Quantité </th>
+            <td mat-cell *matCellDef="let ressource"> {{ressource.quantite}} </td>
+          </ng-container>
+
+          <!-- Type Column -->
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef> Type </th>
+            <td mat-cell *matCellDef="let ressource"> {{ressource.type?.nom || 'N/A'}} </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let ressource">
+              <button mat-icon-button color="primary" (click)="editRessource(ressource)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteRessource(ressource)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Add Resource Form Section -->
+    <div *ngIf="currentSection === 'addResource'" class="content-section">
+      <div class="header">
+        <div class="header-title">
+          <img src="assets/icons/content.svg" alt="Add Resource">
+          Ajouter une Nouvelle Ressource
+        </div>
+      </div>
+
+      <div class="add-resource-container">
+        <!-- Type Resource Form -->
+        <form [formGroup]="typeForm" (ngSubmit)="onSubmitType()" class="resource-form">
+          <h3>Ajouter un Type de Ressource</h3>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nom du Type</mat-label>
+            <input matInput formControlName="nomType" placeholder="Entrez le nom du type">
+            <mat-error *ngIf="typeForm.get('nomType')?.hasError('required')">
+              Le nom du type est requis
+            </mat-error>
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="typeForm.invalid">
+              Ajouter le Type
+            </button>
+          </div>
+        </form>
+
+        <!-- Resource Form -->
+        <form [formGroup]="resourceForm" (ngSubmit)="onSubmitResource()" class="resource-form">
+          <h3>Ajouter une Ressource</h3>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nom de la Ressource</mat-label>
+            <input matInput formControlName="nom" placeholder="Entrez le nom">
+            <mat-error *ngIf="resourceForm.get('nom')?.hasError('required')">
+              Le nom est requis
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Quantité</mat-label>
+            <input matInput type="number" formControlName="quantite" placeholder="Entrez la quantité">
+            <mat-error *ngIf="resourceForm.get('quantite')?.hasError('required')">
+              La quantité est requise
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Type de Ressource</mat-label>
+            <mat-select formControlName="typeId">
+              <mat-option *ngFor="let type of types" [value]="type.id">
+                {{type.nom}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="resourceForm.get('typeId')?.hasError('required')">
+              Le type est requis
+            </mat-error>
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button mat-raised-button color="warn" type="button" (click)="cancelAdd()">
+              Annuler
+            </button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="resourceForm.invalid">
+              Ajouter la Ressource
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- Profile Section -->
     <div *ngIf="currentSection === 'profile'" class="profile-section">
       <div class="header">
@@ -142,6 +289,25 @@
               <label>State/Region</label>
               <input type="text" formControlName="stateRegion" placeholder="Your state or region">
             </div>
+          </div>
+
+          <div class="form-field">
+            <label>Phone Number</label>
+            <ngx-intl-tel-input
+              [cssClass]="'custom-phone-input'"
+              [preferredCountries]="preferredCountries"
+              [enableAutoCountrySelect]="true"
+              [enablePlaceholder]="true"
+              [searchCountryFlag]="true"
+              [searchCountryField]="[SearchCountryField.All]"
+              [selectFirstCountry]="true"
+              [selectedCountryISO]="CountryISO.UnitedStates"
+              [maxLength]="15"
+              [phoneValidation]="true"
+              [separateDialCode]="separateDialCode"
+              name="phone"
+              formControlName="phone">
+            </ngx-intl-tel-input>
           </div>
 
           <button type="submit" class="save-btn">Save Profile</button>
