@@ -22,6 +22,7 @@ public class EvaluationEvenementService implements IevaluationService{
     }
 
     public EvaluationEvenement saveEvenement(EvaluationEvenement evaluation) {
+        evaluation.setUserId(EvaluationEvenement.getUserId());
         return evenementRepository.save(evaluation);
     }
 
@@ -40,6 +41,7 @@ public class EvaluationEvenementService implements IevaluationService{
     public EvaluationEvenement updateEvenement(String id, EvaluationEvenement evaluation) {
         if (evenementRepository.existsById(id)) {
             evaluation.setId(id);
+            evaluation.setUserId(EvaluationEvenement.getUserId());
             return evenementRepository.save(evaluation);
         }
         return null;
@@ -51,6 +53,10 @@ public class EvaluationEvenementService implements IevaluationService{
 
     public List<EvaluationEvenement> getEvenementsOrderedByNoteDesc() {
         return evenementRepository.findAllByOrderByNoteDesc();
+    }
+
+    public List<EvaluationEvenement> getEvenementsByUserId() {
+        return evenementRepository.findByUserId(EvaluationEvenement.getUserId());
     }
 
     public double getAverageRating() {

@@ -11,4 +11,5 @@ import java.util.List;
 public interface EvaluationEvenementRepository extends MongoRepository<EvaluationEvenement, String> {
     List<EvaluationEvenement> findByNote(int note);
     List<EvaluationEvenement> findAllByOrderByNoteDesc();
+    List<EvaluationEvenement> findByUserId(String userId);
 }

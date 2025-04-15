@@ -13,6 +13,7 @@ public class evaluationvService {
     private evaluationvRepository repository;
 
     public evaluationVolontaire saveEvaluation(evaluationVolontaire evaluation) {
+        evaluation.setUserId(evaluationVolontaire.getUserId());
         return repository.save(evaluation);
     }
 
@@ -29,6 +30,7 @@ public class evaluationvService {
 
     public evaluationVolontaire updateEvaluation(evaluationVolontaire evaluation) {
         if (repository.existsById(evaluation.getId())) {
+            evaluation.setUserId(evaluationVolontaire.getUserId());
             return repository.save(evaluation);
         } else {
             throw new IllegalArgumentException("Évaluation avec l'ID " + evaluation.getId() + " introuvable.");
@@ -50,5 +52,9 @@ public class evaluationvService {
 
     public List<evaluationVolontaire> getEvaluationsOrderedByNoteDesc() {
         return repository.findAllByOrderByNoteDesc();
+    }
+
+    public List<evaluationVolontaire> getEvaluationsByUserId() {
+        return repository.findByUserId(evaluationVolontaire.getUserId());
     }
 }

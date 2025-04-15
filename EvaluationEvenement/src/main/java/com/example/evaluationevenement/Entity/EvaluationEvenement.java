@@ -15,4 +15,13 @@ public class EvaluationEvenement {
     private String evenementId;
     private int note;
     private String commentaire;
+    private String userId;
+
+    public static String getUserId() {
+        return "static-user-id";
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId != null ? userId : getUserId();
+    }
 }

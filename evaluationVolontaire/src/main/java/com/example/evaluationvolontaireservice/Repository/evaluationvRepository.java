@@ -10,4 +10,5 @@ import java.util.List;
 public interface evaluationvRepository extends MongoRepository<evaluationVolontaire, String> {
     List<evaluationVolontaire> findByNote(int note);
     List<evaluationVolontaire> findAllByOrderByNoteDesc();
+    List<evaluationVolontaire> findByUserId(String userId);
 }
