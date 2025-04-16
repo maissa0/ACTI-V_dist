@@ -1,0 +1,239 @@
+<header class="header">
+  <div class="logo">
+    <a routerLink="/" class="website-name">Acti'V</a>
+  </div>
+  <nav class="nav-menu">
+    <a routerLink="/home" routerLinkActive="active">Home</a>
+    <a routerLink="/about" routerLinkActive="active">About us</a>
+    <a routerLink="/events" routerLinkActive="active">Events</a>
+  </nav>
+  <div class="auth-buttons">
+    <div class="user-menu">
+      <div class="user-info">
+        <a routerLink="/profile" class="profile-link">{{ userInfo?.username || email }}</a>
+        <a routerLink="/ressources" class="resources-link">Resources</a>
+      </div>
+      <div class="user-actions">
+        <button routerLink="/profile" class="profile-btn" title="Profile">
+          <mat-icon>account_circle</mat-icon>
+        </button>
+        <button (click)="logout()" class="logout-btn" title="Logout">
+          <mat-icon>exit_to_app</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="profile-container">
+  <div class="profile-content">
+    <div class="profile-header">
+      <div class="profile-picture-container">
+        <div class="profile-picture">
+          <img *ngIf="profileImage" [src]="profileImage" alt="Profile Picture">
+          <div *ngIf="!profileImage" class="placeholder-image">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div *ngIf="loading" class="loading-overlay">
+            <mat-spinner diameter="30"></mat-spinner>
+          </div>
+          <button class="upload-btn" (click)="fileInput.click()" [disabled]="loading">
+            <mat-icon>add_a_photo</mat-icon>
+          </button>
+          <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" accept="image/*">
+        </div>
+        <div class="profile-picture-label">Profile Picture</div>
+        <button class="upload-text-btn" (click)="fileInput.click()" [disabled]="loading">PICK A PHOTO</button>
+      </div>
+      
+      <div class="user-info-container">
+        <div class="user-info-item user-email">
+          <mat-icon>email</mat-icon>
+          <span>{{ email }}</span>
+        </div>
+        <div *ngIf="userInfo?.role" class="user-info-item user-role">
+          <mat-icon>badge</mat-icon>
+          <span>{{ userInfo?.role }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs-section">
+      <mat-tab-group mat-align-tabs="start">
+        <mat-tab label="Profile Information">
+          <div class="tab-content">
+            <div class="profile-section">
+              <h2>Profile Picture</h2>
+              <div class="action-buttons">
+                <button class="change-btn" (click)="fileInput.click()" [disabled]="loading">
+                  <mat-icon>photo_camera</mat-icon>
+                  Change Picture
+                </button>
+                <button class="remove-btn" (click)="removeProfilePicture()" [disabled]="!profileImage || loading">
+                  <mat-icon>delete</mat-icon>
+                  Remove Picture
+                </button>
+              </div>
+            </div>
+
+            <div class="profile-section">
+              <h2>Personal Information</h2>
+              <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+                <div class="form-row">
+                  <div class="form-field">
+                    <label>Username</label>
+                    <input type="text" formControlName="username" readonly class="readonly-field">
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-field">
+                    <label>Email Address</label>
+                    <input type="email" formControlName="email">
+                    <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched" class="error-message">
+                      <span *ngIf="profileForm.get('email')?.errors?.['required']">Email is required</span>
+                      <span *ngIf="profileForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-row two-columns">
+                  <div class="form-field">
+                    <label>First Name</label>
+                    <input type="text" formControlName="firstName">
+                  </div>
+                  <div class="form-field">
+                    <label>Last Name</label>
+                    <input type="text" formControlName="lastName">
+                  </div>
+                </div>
+                
+                <div class="button-container">
+                  <button type="submit" class="save-btn" [disabled]="profileForm.invalid">
+                    Save Changes
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Security">
+          <div class="tab-content">
+            <div class="profile-section">
+              <h2>Change Your Password</h2>
+              <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+                <div class="form-row">
+                  <div class="form-field">
+                    <label>Current Password</label>
+                    <input type="password" formControlName="currentPassword">
+                    <div *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched" class="error-message">
+                      <span *ngIf="passwordForm.get('currentPassword')?.errors?.['required']">Current password is required</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-field">
+                    <label>New Password</label>
+                    <input type="password" formControlName="newPassword">
+                    <div *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched" class="error-message">
+                      <span *ngIf="passwordForm.get('newPassword')?.errors?.['required']">New password is required</span>
+                      <span *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">Password must be at least 8 characters long</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <div class="form-field">
+                    <label>Confirm Password</label>
+                    <input type="password" formControlName="confirmPassword">
+                    <div *ngIf="passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched" class="error-message">
+                      <span *ngIf="passwordForm.get('confirmPassword')?.errors?.['required']">Please confirm your password</span>
+                    </div>
+                    <div *ngIf="passwordForm.errors?.['passwordMismatch'] && passwordForm.get('confirmPassword')?.touched" class="error-message">
+                      <span>Passwords don't match</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="button-container">
+                  <button type="submit" class="save-btn" [disabled]="passwordForm.invalid || loading">
+                    Change Password
+                  </button>
+                </div>
+              </form>
+            </div>
+            
+            <div class="profile-section" *ngIf="userInfo?.twoFactorEnabled !== undefined">
+              <h2>Two-Factor Authentication</h2>
+              <div class="tfa-status">
+                <p>Two-factor authentication is currently {{userInfo?.twoFactorEnabled ? 'enabled' : 'disabled'}}.</p>
+                <button mat-raised-button color="primary" (click)="toggleTwoFactor()" [disabled]="loading">
+                  {{userInfo?.twoFactorEnabled ? 'Disable' : 'Enable'}} Two-Factor Authentication
+                </button>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Competences">
+          <div class="tab-content">
+            <div class="profile-section">
+              <h2>Your Competences</h2>
+              <div *ngIf="loadingCompetences" class="loading-spinner">
+                <mat-spinner diameter="40"></mat-spinner>
+              </div>
+              <div class="competences-section" *ngIf="!loadingCompetences">
+                <div class="competence-input">
+                  <div class="input-group">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Add a new competence</mat-label>
+                      <input matInput [(ngModel)]="newCompetence" placeholder="E.g. Angular, React, UI/UX Design">
+                    </mat-form-field>
+                    
+                    <mat-form-field appearance="outline">
+                      <mat-label>Skill level</mat-label>
+                      <mat-select [(ngModel)]="selectedLevel">
+                        <mat-option *ngFor="let level of levels" [value]="level">{{ level }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  
+                  <mat-form-field appearance="outline" class="description-field">
+                    <mat-label>Description (optional)</mat-label>
+                    <textarea matInput [(ngModel)]="competenceDescription" 
+                              placeholder="Brief description of your experience with this skill"></textarea>
+                  </mat-form-field>
+                  
+                  <button mat-raised-button color="primary" (click)="addCompetence()" 
+                          [disabled]="!newCompetence || loadingCompetences">
+                    Add Competence
+                  </button>
+                </div>
+                
+                <div class="competence-list">
+                  <div *ngIf="competences.length === 0" class="no-competences">
+                    No competences added yet. Add skills to showcase your expertise.
+                  </div>
+                  <div *ngFor="let competence of competences" class="competence-chip">
+                    <div class="competence-content">
+                      <div class="competence-header">
+                        <span class="competence-name">{{ competence.name }}</span>
+                        <span class="competence-level">{{ competence.level || 'Intermediate' }}</span>
+                      </div>
+                      <div *ngIf="competence.description" class="competence-description">
+                        {{ competence.description }}
+                      </div>
+                    </div>
+                    <button class="remove-btn" (click)="removeCompetence(competence)" [disabled]="loadingCompetences">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

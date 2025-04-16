@@ -1,0 +1,70 @@
+<header class="header">
+  <div class="logo">
+    <a routerLink="/" class="website-name">Acti'V</a>
+  </div>
+  <nav class="nav-menu">
+    <a routerLink="/home" routerLinkActive="active">Home</a>
+    <a routerLink="/about" routerLinkActive="active">About us</a>
+    <a routerLink="/events" routerLinkActive="active">Events</a>
+  </nav>
+  <div class="auth-buttons">
+    <a routerLink="/login" class="login-btn active">Sign In</a>
+    <a routerLink="/signup" class="signup-btn">Sign Up</a>
+  </div>
+</header>
+
+<div class="login-container">
+  <div class="login-card">
+    <h1>Welcome Back</h1>
+    <div class="subtitle">Sign in to your account</div>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-field">
+        <input 
+          type="text" 
+          formControlName="username" 
+          placeholder="Username"
+          [class.error]="f['username'].errors && f['username'].touched"
+        >
+        <div class="error-message" *ngIf="f['username'].errors?.['required'] && f['username'].touched">
+          Username is required
+        </div>
+        <div class="error-message" *ngIf="f['username'].errors?.['minlength'] && f['username'].touched">
+          Username must be at least 3 characters
+        </div>
+      </div>
+
+      <div class="form-field">
+        <input 
+          [type]="hidePassword ? 'password' : 'text'" 
+          formControlName="password" 
+          placeholder="Password"
+          [class.error]="f['password'].errors && f['password'].touched"
+        >
+        <button type="button" class="password-toggle" (click)="hidePassword = !hidePassword">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <div class="error-message" *ngIf="f['password'].errors?.['required'] && f['password'].touched">
+          Password is required
+        </div>
+      </div>
+
+      <div class="forgot-password">
+        <a routerLink="/forgot-password">Forgot Password?</a>
+      </div>
+
+      <button type="submit" class="login-button" [disabled]="loading || loginForm.invalid">
+        <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+        <span *ngIf="!loading">Login</span>
+      </button>
+
+      <div class="signup-prompt">
+        Don't have an account? <a routerLink="/signup">Sign Up</a>
+      </div>
+
+      <div class="error-message main-error" *ngIf="error">
+        {{ error }}
+      </div>
+    </form>
+  </div>
+</div> 

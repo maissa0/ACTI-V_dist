@@ -1,0 +1,239 @@
+/* Header styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 4rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.logo .website-name {
+  color: white;
+  font-size: 2rem;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  font-family: 'Segoe UI', sans-serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.logo .website-name:hover {
+  color: #f3e8ff;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: color 0.2s ease;
+}
+
+.nav-menu a:hover, .nav-menu a.active {
+  color: #d8b4fe;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.auth-buttons .login-btn {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1.5rem;
+  border: 2px solid #d8b4fe;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.auth-buttons .login-btn:hover, .auth-buttons .login-btn.active {
+  background-color: #d8b4fe;
+  color: black;
+}
+
+.auth-buttons .signup-btn {
+  background-color: #d8b4fe;
+  color: black;
+  text-decoration: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.auth-buttons .signup-btn:hover, .auth-buttons .signup-btn.active {
+  background-color: #f3e8ff;
+}
+
+/* Signup styles */
+.signup-container {
+  min-height: calc(100vh - 120px);
+  padding: 40px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.signup-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: fadeIn 0.5s ease-out;
+}
+
+h1 {
+  text-align: center;
+  margin: 0;
+  color: white;
+  font-size: 32px;
+  font-weight: 600;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 8px 0 24px;
+  font-size: 14px;
+}
+
+.form-field {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-size: 14px;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+input:focus {
+  outline: none;
+  border-color: #d8b4fe;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+input.error {
+  border-color: #ef4444;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+}
+
+.password-toggle:hover {
+  color: white;
+}
+
+.signup-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #d8b4fe;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 24px 0;
+  height: 48px;
+}
+
+.signup-button:hover {
+  background-color: #f3e8ff;
+  transform: translateY(-1px);
+}
+
+.signup-button:disabled {
+  background-color: rgba(216, 180, 254, 0.5);
+  cursor: not-allowed;
+}
+
+.remember-me {
+  margin: 16px 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.login-prompt {
+  text-align: center;
+  margin-top: 24px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.login-prompt a {
+  color: #d8b4fe;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-prompt a:hover {
+  color: white;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.main-error {
+  text-align: center;
+  margin-top: 16px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 

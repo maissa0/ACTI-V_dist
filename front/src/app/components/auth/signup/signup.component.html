@@ -1,0 +1,127 @@
+<header class="header">
+  <div class="logo">
+    <a routerLink="/" class="website-name">Acti'V</a>
+  </div>
+  <nav class="nav-menu">
+    <a routerLink="/home" routerLinkActive="active">Home</a>
+    <a routerLink="/about" routerLinkActive="active">About us</a>
+    <a routerLink="/events" routerLinkActive="active">Events</a>
+  </nav>
+  <div class="auth-buttons">
+    <a routerLink="/login" class="login-btn">Sign In</a>
+    <a routerLink="/signup" class="signup-btn active">Sign Up</a>
+  </div>
+</header>
+
+<div class="signup-container">
+  <div class="signup-card">
+    <h1>Sign up</h1>
+    <p class="subtitle">Create your account</p>
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <div class="form-field">
+        <input 
+          type="text" 
+          formControlName="username" 
+          placeholder="Username"
+          [class.error]="f['username'].errors && f['username'].touched"
+        >
+        <div class="error-message" *ngIf="f['username'].errors?.['required'] && f['username'].touched">
+          Username is required
+        </div>
+        <div class="error-message" *ngIf="f['username'].errors?.['minlength'] && f['username'].touched">
+          Username must be at least 3 characters
+        </div>
+        <div class="error-message" *ngIf="f['username'].errors?.['maxlength'] && f['username'].touched">
+          Username cannot exceed 20 characters
+        </div>
+      </div>
+      
+      <div class="form-field">
+        <input 
+          type="text" 
+          formControlName="firstName" 
+          placeholder="First Name"
+          [class.error]="f['firstName'].errors && f['firstName'].touched"
+        >
+        <div class="error-message" *ngIf="f['firstName'].errors?.['required'] && f['firstName'].touched">
+          First Name is required
+        </div>
+        <div class="error-message" *ngIf="f['firstName'].errors?.['maxlength'] && f['firstName'].touched">
+          First Name cannot exceed 120 characters
+        </div>
+      </div>
+      
+      <div class="form-field">
+        <input 
+          type="text" 
+          formControlName="lastName" 
+          placeholder="Last Name"
+          [class.error]="f['lastName'].errors && f['lastName'].touched"
+        >
+        <div class="error-message" *ngIf="f['lastName'].errors?.['required'] && f['lastName'].touched">
+          Last Name is required
+        </div>
+        <div class="error-message" *ngIf="f['lastName'].errors?.['maxlength'] && f['lastName'].touched">
+          Last Name cannot exceed 120 characters
+        </div>
+      </div>
+
+      <div class="form-field">
+        <input 
+          type="email" 
+          formControlName="email" 
+          placeholder="Email"
+          [class.error]="f['email'].errors && f['email'].touched"
+        >
+        <div class="error-message" *ngIf="f['email'].errors?.['required'] && f['email'].touched">
+          Email is required
+        </div>
+        <div class="error-message" *ngIf="f['email'].errors?.['email'] && f['email'].touched">
+          Please enter a valid email
+        </div>
+        <div class="error-message" *ngIf="f['email'].errors?.['maxlength'] && f['email'].touched">
+          Email cannot exceed 50 characters
+        </div>
+      </div>
+
+      <div class="form-field">
+        <input 
+          [type]="hidePassword ? 'password' : 'text'" 
+          formControlName="password" 
+          placeholder="Password"
+          [class.error]="f['password'].errors && f['password'].touched"
+        >
+        <button type="button" class="password-toggle" (click)="hidePassword = !hidePassword">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <div class="error-message" *ngIf="f['password'].errors?.['required'] && f['password'].touched">
+          Password is required
+        </div>
+        <div class="error-message" *ngIf="f['password'].errors?.['minlength'] && f['password'].touched">
+          Password must be at least 6 characters
+        </div>
+        <div class="error-message" *ngIf="f['password'].errors?.['maxlength'] && f['password'].touched">
+          Password cannot exceed 40 characters
+        </div>
+      </div>
+
+      <button type="submit" class="signup-button" [disabled]="loading || signupForm.invalid">
+        <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+        <span *ngIf="!loading">Sign up</span>
+      </button>
+
+      <div class="remember-me">
+        <mat-checkbox formControlName="rememberMe" color="primary">Remember me</mat-checkbox>
+      </div>
+
+      <div class="login-prompt">
+        Already have an account? <a routerLink="/login">Sign in</a>
+      </div>
+
+      <div class="error-message main-error" *ngIf="error">
+        {{ error }}
+      </div>
+    </form>
+  </div>
+</div>
