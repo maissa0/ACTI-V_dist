@@ -115,6 +115,8 @@ export class DashboardComponent implements OnInit {
         return 'Resource Management';
       case 'user-management':
         return 'User Management';
+      case 'event-management':
+        return 'Event Management';
       case 'analytics':
         return 'Analytics';
       case 'likes':
@@ -209,17 +211,32 @@ export class DashboardComponent implements OnInit {
         fontStyle: 'bold',
       },
       bodyStyles: {
-        fillColor: [255, 255, 255],
-        textColor: [0, 0, 0],
-      },
+        textColor: [50, 50, 50]
+      }
     });
   
     doc.save('ressources.pdf');
   }
 
-  deleteRessource(ressource: Ressource): void {
-    if (confirm('Are you sure you want to delete this resource?')) {
-      this.ressourceService.deleteRessource(ressource.id).subscribe({
+  // Resource CRUD operations
+  addRessource(): void {
+    this.resourceForm.reset();
+    // Show the add resource form/modal logic would go here
+    this.currentSection = 'addResource';
+  }
+
+  editRessource(resource: Ressource): void {
+    this.resourceForm.patchValue({
+      nom: resource.nom,
+      quantite: resource.quantite,
+      typeId: resource.type?.id
+    });
+    // Show the edit resource form/modal logic would go here
+  }
+
+  deleteRessource(resource: Ressource): void {
+    if (confirm(`Are you sure you want to delete ${resource.nom}?`)) {
+      this.ressourceService.deleteRessource(resource.id).subscribe({
         next: () => {
           this.loadResources();
         },
@@ -230,41 +247,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  editRessource(ressource: Ressource): void {
-    // Implement edit functionality
-    console.log('Edit resource:', ressource);
-  }
-
-  addRessource(): void {
-    this.currentSection = 'addResource';
-    this.typeForm.reset();
-    this.resourceForm.reset();
-  }
-
-  cancelAdd(): void {
-    this.currentSection = 'content';
-    this.typeForm.reset();
-    this.resourceForm.reset();
-  }
-
-  onSubmitType(): void {
-    if (this.typeForm.valid) {
-      const typeData = {
-        nom: this.typeForm.get('nomType')?.value
-      };
-      
-      this.typeRessourceService.createType(typeData).subscribe({
-        next: () => {
-          this.loadTypes();
-          this.typeForm.reset();
-        },
-        error: (error: Error) => {
-          console.error('Error creating type:', error);
-        }
-      });
-    }
-  }
-
+  // Methods for the Add Resource section
   onSubmitResource(): void {
     if (this.resourceForm.valid) {
       const resourceData: Partial<Ressource> = {
@@ -289,10 +272,28 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  onSubmitProfile(): void {
-    if (this.profileForm.valid) {
-      console.log(this.profileForm.value);
+  onSubmitType(): void {
+    if (this.typeForm.valid) {
+      const typeData = {
+        nom: this.typeForm.get('nomType')?.value
+      };
+      
+      this.typeRessourceService.createType(typeData).subscribe({
+        next: () => {
+          this.loadTypes();
+          this.typeForm.reset();
+        },
+        error: (error: Error) => {
+          console.error('Error creating type:', error);
+        }
+      });
     }
+  }
+
+  cancelAdd(): void {
+    this.currentSection = 'content';
+    this.typeForm.reset();
+    this.resourceForm.reset();
   }
 
   logout(): void {

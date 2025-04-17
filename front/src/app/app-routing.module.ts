@@ -11,6 +11,7 @@ import { DashboardComponent } from './components/admin/dashboard/dashboard.compo
 import { UserManagementComponent } from './components/admin/user-management/user-management.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { EventManagementComponent } from './components/event-management/event-management.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -42,6 +43,11 @@ const routes: Routes = [
         canActivate: [AdminGuard]
       }
     ]
+  },
+  { 
+    path: 'events', 
+    component: EventManagementComponent, 
+    canActivate: [AuthGuard] 
   },
   { path: '**', redirectTo: '/home' }
 ];

@@ -1,0 +1,167 @@
+<div class="event-management-container">
+  <div class="header">
+    <h1>My Events</h1>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="createEvent()">
+        <mat-icon>add</mat-icon> Create Event
+      </button>
+    </div>
+  </div>
+  
+  <div class="filters">
+    <mat-form-field appearance="outline">
+      <mat-label>Search events</mat-label>
+      <input matInput [(ngModel)]="searchText" (keyup)="searchEvents()" placeholder="Search by name or description">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select [(ngModel)]="selectedStatus" (selectionChange)="filterByStatus()">
+        <mat-option [value]="null">All</mat-option>
+        <mat-option value="upcoming">Upcoming</mat-option>
+        <mat-option value="ongoing">Ongoing</mat-option>
+        <mat-option value="past">Past</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading events...</p>
+  </div>
+  
+  <div class="events-table-container" *ngIf="!isLoading">
+    <div class="empty-state" *ngIf="filteredEvents.length === 0">
+      <mat-icon>event_busy</mat-icon>
+      <p>No events found</p>
+      <button mat-stroked-button color="primary" (click)="createEvent()">Create your first event</button>
+    </div>
+    
+    <table mat-table [dataSource]="filteredEvents" *ngIf="filteredEvents.length > 0" class="mat-elevation-z2">
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let event">
+          <div class="event-name-cell">
+            <span>{{ event.name }}</span>
+          </div>
+        </td>
+      </ng-container>
+      
+      <!-- Dates Column -->
+      <ng-container matColumnDef="dates">
+        <th mat-header-cell *matHeaderCellDef>Dates</th>
+        <td mat-cell *matCellDef="let event">
+          <div class="dates-cell">
+            <div>{{ event.dateDeb | date:'MMM d, y' }}</div>
+            <div>to</div>
+            <div>{{ event.dateFin | date:'MMM d, y' }}</div>
+          </div>
+        </td>
+      </ng-container>
+      
+      <!-- Type Column -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let event">
+          <span class="event-type">{{ event.type }}</span>
+        </td>
+      </ng-container>
+      
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let event">
+          <span class="status-badge" [ngClass]="getEventStatus(event)">
+            {{ getEventStatus(event) }}
+          </span>
+        </td>
+      </ng-container>
+      
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let event">
+          <button mat-icon-button color="primary" matTooltip="Edit" (click)="editEvent(event)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matTooltip="Delete" (click)="deleteEvent(event)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+  
+  <div class="event-form-container" *ngIf="isEditMode || currentEventId === null">
+    <div class="form-header">
+      <h2>{{ isEditMode ? 'Edit Event' : 'Create New Event' }}</h2>
+      <button mat-icon-button color="warn" (click)="cancelEdit()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    
+    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Event Name</mat-label>
+          <input matInput formControlName="name" placeholder="Enter event name">
+          <mat-error *ngIf="eventForm.get('name')?.errors?.['required']">Name is required</mat-error>
+          <mat-error *ngIf="eventForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters</mat-error>
+        </mat-form-field>
+      </div>
+      
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="4" placeholder="Describe your event"></textarea>
+          <mat-error *ngIf="eventForm.get('description')?.errors?.['required']">Description is required</mat-error>
+          <mat-error *ngIf="eventForm.get('description')?.errors?.['minlength']">Description must be at least 10 characters</mat-error>
+        </mat-form-field>
+      </div>
+      
+      <div class="form-row date-inputs">
+        <mat-form-field appearance="outline">
+          <mat-label>Start Date</mat-label>
+          <input matInput [matDatepicker]="startPicker" formControlName="dateDeb">
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+          <mat-error *ngIf="eventForm.get('dateDeb')?.errors?.['required']">Start date is required</mat-error>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>End Date</mat-label>
+          <input matInput [matDatepicker]="endPicker" formControlName="dateFin">
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+          <mat-error *ngIf="eventForm.get('dateFin')?.errors?.['required']">End date is required</mat-error>
+        </mat-form-field>
+      </div>
+      
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Event Type</mat-label>
+          <mat-select formControlName="type">
+            <mat-option value="conference">Conference</mat-option>
+            <mat-option value="workshop">Workshop</mat-option>
+            <mat-option value="seminar">Seminar</mat-option>
+            <mat-option value="training">Training</mat-option>
+            <mat-option value="other">Other</mat-option>
+          </mat-select>
+          <mat-error *ngIf="eventForm.get('type')?.errors?.['required']">Event type is required</mat-error>
+        </mat-form-field>
+      </div>
+      
+      <div class="form-actions">
+        <button mat-button type="button" (click)="cancelEdit()">Cancel</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="eventForm.invalid">
+          {{ isEditMode ? 'Update' : 'Create' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div> 

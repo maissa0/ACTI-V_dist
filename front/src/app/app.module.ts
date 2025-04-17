@@ -37,6 +37,10 @@ import { UserManagementComponent } from './components/admin/user-management/user
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { AdminGuard } from './guards/admin.guard';
+import { EventManagementComponent } from './components/event-management/event-management.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -52,6 +56,7 @@ import { AdminGuard } from './guards/admin.guard';
     DashboardComponent,
     NavigationComponent,
     UserManagementComponent,
+    EventManagementComponent
   ],
   imports: [
     BrowserModule,
@@ -76,7 +81,10 @@ import { AdminGuard } from './guards/admin.guard';
     MatMenuModule,
     MatTabsModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatTooltipModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

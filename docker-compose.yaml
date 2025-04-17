@@ -1,0 +1,199 @@
+version : '3.8'
+
+services:
+  eureka-server:
+    image: maissa55/microservice/eureka-server:latest
+    container_name: eureka-server-instance
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_REGISTERWITHEUREKA=false
+      - EUREKA_CLIENT_FETCHREGISTRY=false
+      - EUREKA_INSTANCE_HOSTNAME=eureka-server-instance
+      - SERVER_PORT=8761
+    networks:
+      - spring-cloud
+
+  gateway_for_project:
+    image: maissa55/microservice/gateway_for_project:latest
+    container_name: gateway_for_project-instance
+    depends_on:
+      - eureka-server
+    ports:
+      - "5000:5000"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server-instance:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=api-gateway-instance
+      - SERVER_PORT=5000
+    networks:
+      - spring-cloud
+
+  userauth:
+    image: maissa55/microservice/userauth:latest
+    container_name: userauth-instance
+    depends_on:
+      - eureka-server
+      - mysql
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-instance:3306/distwebuser?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root    
+      - SPRING_DATASOURCE_PASSWORD=M28d05&
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server-instance:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=userauth-instance
+    networks:
+      - spring-cloud
+
+  competences:
+    image: maissa55/microservice/competences:latest
+    container_name: competences-instance
+    depends_on:
+      - eureka-server
+      - mysql
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-instance:3306/distwebcompetence?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root    
+      - SPRING_DATASOURCE_PASSWORD=M28d05&
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server-instance:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=competences-instance
+    networks:
+      - spring-cloud
+
+  missions:
+    image: maissa55/microservice/missions:latest
+    container_name: missions-instance
+    depends_on:
+      - eureka-server
+      - mysql
+    ports:
+      - "8089:8089"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-instance:3306/distmission?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root    
+      - SPRING_DATASOURCE_PASSWORD=M28d05&
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server-instance:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=missions-instance
+    networks:
+      - spring-cloud
+
+  evennement:
+    image: maissa55/microservice/evennement:latest
+    container_name: evennement-instance
+    depends_on:
+      - eureka-server
+      - mysql
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-instance:3306/distevent?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root    
+      - SPRING_DATASOURCE_PASSWORD=M28d05&
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server-instance:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=evennement-instance
+    networks:
+      - spring-cloud
+
+  evaluationevenement:
+    image: maissa55/microservice/evaluationevenement:latest
+    container_name: evaluationevenement-instance
+    depends_on:
+      - mongodb2
+      - eureka-server
+    ports:
+      - "8087:8087"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb2:27017/Activ2?authSource=admin
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server-instance:8761/eureka
+      - EUREKA_INSTANCE_HOSTNAME=evaluationevenement-instance
+    networks:
+      - spring-cloud
+
+  evaluationvolontaire:
+    image: maissa55/microservice/evaluationvolontaire:latest
+    container_name: evaluationvolontaire-instance
+    depends_on:
+      - mongodb1
+      - eureka-server
+    ports:
+      - "8088:8088"  # Changed from 8087 to avoid port conflict
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb1:27017/Activ?authSource=admin
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server-instance:8761/eureka
+      - EUREKA_INSTANCE_HOSTNAME=evaluationVolontaire-instance
+    networks:
+      - spring-cloud
+
+  ressources:
+    image: maissa55/microservice/ressources:latest
+    container_name: ressources-instance
+    depends_on:
+      - eureka-server
+    ports:
+      - "8086:8086"
+    volumes:
+      - ressources-data:/app/Database/Data
+    environment:
+      - SPRING_H2_CONSOLE_ENABLED=true
+      - SPRING_H2_CONSOLE_PATH=/h2
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:/app/Database/Data/Ressource;DB_CLOSE_ON_EXIT=FALSE
+      - SPRING_DATASOURCE_USERNAME=Aya
+      - SPRING_DATASOURCE_PASSWORD=
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server-instance:8761/eureka/
+      - SERVER_PORT=8086
+      - SERVER_SERVLET_CONTEXT_PATH=/ressources
+    networks:
+      - spring-cloud
+
+  mysql:
+    image: mysql:8
+    container_name: mysql-instance
+    ports:
+      - "3309:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=M28d05&
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql-init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - spring-cloud
+
+  mongodb1:
+    image: mongo:latest
+    container_name: mongodb1
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=maissa
+      - MONGO_INITDB_ROOT_PASSWORD=maissa
+      - MONGO_INITDB_DATABASE=Activ
+    volumes:
+      - mongodb1-data:/data/db
+    networks:
+      - spring-cloud
+
+  mongodb2:
+    image: mongo:latest
+    container_name: mongodb2
+    ports:
+      - "27018:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=maissa
+      - MONGO_INITDB_ROOT_PASSWORD=maissa
+      - MONGO_INITDB_DATABASE=Activ2
+    volumes:
+      - mongodb2-data:/data/db
+    networks:
+      - spring-cloud
+
+networks:
+  spring-cloud:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  ressources-data:
+  mongodb1-data:
+  mongodb2-data:

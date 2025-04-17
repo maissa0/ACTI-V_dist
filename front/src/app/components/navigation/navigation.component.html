@@ -6,6 +6,10 @@
   <ng-container>
     <a mat-button routerLink="/home">Home</a>
     <a mat-button routerLink="/ressources" *ngIf="isLoggedIn">Resources</a>
+    <a mat-button routerLink="/events" routerLinkActive="active" *ngIf="isLoggedIn">
+      <mat-icon>event</mat-icon>
+      <span>My Events</span>
+    </a>
   </ng-container>
 
   <span class="spacer"></span>

@@ -16,6 +16,10 @@
         <mat-icon>people</mat-icon>
         User Management
       </a>
+      <a (click)="showSection('event-management')" [class.active]="currentSection === 'event-management'" class="nav-item">
+        <mat-icon>event</mat-icon>
+        Event Management
+      </a>
       <a (click)="showSection('analytics')" [class.active]="currentSection === 'analytics'" class="nav-item">
         <mat-icon>analytics</mat-icon>
         Analytics
@@ -232,6 +236,11 @@
     <!-- User Management Section -->
     <div *ngIf="currentSection === 'user-management'" class="dashboard-content">
       <app-user-management></app-user-management>
+    </div>
+
+    <!-- Event Management Section -->
+    <div *ngIf="currentSection === 'event-management'" class="dashboard-content">
+      <app-event-management></app-event-management>
     </div>
 
     <!-- Add Resource Section -->

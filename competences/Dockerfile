@@ -1,5 +1,5 @@
 FROM openjdk:17-jdk-slim
 WORKDIR /app
-COPY target/*.jar competence.jar
+COPY target/competences-0.0.1-SNAPSHOT.jar competences.jar
+ENTRYPOINT ["java", "-jar", "competences.jar"]
 EXPOSE 8082
-ENTRYPOINT ["java","-jar","app.jar"]
