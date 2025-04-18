@@ -1,0 +1,51 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /api/userAuth
+
+spring:
+  application:
+    name: userAuth
+
+  security:
+    user:
+      name: user
+      password: password
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: Ov23liwijTRICMFwC04x
+            client-secret: f49e64a6b0af92417ebb489459292ef07374c89f
+            scope:
+              - read:user
+              - user:email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+          google:
+            client-id: 1014911445366-g14b42h60261a3ie6lcrrv2k7t6jpa69.apps.googleusercontent.com
+            client-secret: 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
+        provider:
+          github:
+            authorization-uri: https://github.com/login/oauth/authorize
+            token-uri: https://github.com/login/oauth/access_token
+            user-info-uri: https://api.github.com/user
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/distwebuser
+    username: root
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: pidevlearn1@gmail.com
+    password: bjbxyxkejdcwhuiq
+    properties:
+      mail:
+        smtp:
+          auth: true
