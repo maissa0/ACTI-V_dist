@@ -68,10 +68,20 @@ export class AuthInterceptor implements HttpInterceptor {
         }
       }
       
+      // Ensure the URL uses port 5000 (gateway) instead of directly accessing microservices
+      let url = request.url;
+      
+      // If it's a direct call to a microservice, redirect through gateway
+      if (url.includes('localhost:8086')) {
+        url = url.replace('localhost:8086', 'localhost:5000');
+        console.log('Redirecting request through gateway:', url);
+      }
+      
       // Clone the request with the updated headers
       request = request.clone({
+        url: url,
         setHeaders: headers,
-        withCredentials: true  // Include cookies in cross-site requests
+        withCredentials: false  // Changed to false to avoid CORS issues with the gateway
       });
     }
 

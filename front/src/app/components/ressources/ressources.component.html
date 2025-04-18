@@ -1,43 +1,77 @@
 <div class="container">
   <div class="header">
-    <h2>Ressources Disponibles</h2>
-    <div class="filters">
-      <!-- Button to download PDF -->
-      <button mat-button (click)="downloadAllRessourcesPDF()" class="download-btn">
-        Télécharger PDF
+    <h2><mat-icon>inventory_2</mat-icon> Resources List</h2>
+    <div class="actions">
+      <button mat-raised-button color="primary" class="download-btn" (click)="downloadAllRessourcesPDF()">
+        <mat-icon>download</mat-icon> Export PDF
       </button>
-      
-      <!-- Search Bar -->
+      <button mat-raised-button color="accent" class="add-btn" (click)="addRessource()">
+        <mat-icon>add</mat-icon> New Resource
+      </button>
+    </div>
+  </div>
+
+  <div class="filters">
+    <!-- Search Bar -->
+    <div class="search-wrapper">
+      <mat-icon>search</mat-icon>
       <input 
         type="text" 
         [(ngModel)]="searchText" 
         (input)="searchRessourceByName()"
-        placeholder="Rechercher par nom" 
+        placeholder="Search by name..." 
         class="search-bar" 
       />
-      
-      <!-- Filter by Type -->
+    </div>
+    
+    <!-- Filter by Type -->
+    <div class="select-wrapper">
+      <mat-icon>filter_list</mat-icon>
       <select [(ngModel)]="selectedTypeId" (change)="filterByType()">
-        <option [value]="null">Tous</option>
+        <option [value]="null">All Types</option>
         <option *ngFor="let type of types" [value]="type.id">{{ type.nom }}</option>
       </select>
     </div>
   </div>
 
-  <table class="custom-table">
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading resources...</p>
+  </div>
+
+  <table class="custom-table" *ngIf="!isLoading && filteredRessources.length > 0">
     <thead>
       <tr>
-        <th>Nom</th>
-        <th>Quantité</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Quantity</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let ressource of filteredRessources">
         <td>{{ ressource.nom }}</td>
+        <td>{{ ressource.type.nom || 'N/A' }}</td>
         <td>{{ ressource.quantite }}</td>
+        <td class="actions-cell">
+          <button mat-icon-button matTooltip="Edit resource" (click)="editRessource(ressource)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Delete resource" (click)="deleteRessource(ressource)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>
+  
+  <div *ngIf="!isLoading && filteredRessources.length === 0" class="empty-state">
+    <mat-icon>inventory_2</mat-icon>
+    <p>No resources found</p>
+    <button mat-raised-button color="accent" (click)="addRessource()">
+      Add your first resource
+    </button>
+  </div>
 </div>
 
 

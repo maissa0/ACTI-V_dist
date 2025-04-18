@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { CommonModule } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -41,6 +42,10 @@ import { EventManagementComponent } from './components/event-management/event-ma
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { EventDetailsDialogComponent } from './components/event-management/event-details-dialog/event-details-dialog.component';
+import { UserDetailsDialogComponent } from './components/admin/user-management/user-details-dialog/user-details-dialog.component';
 
 @NgModule({
   declarations: [
@@ -56,11 +61,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     DashboardComponent,
     NavigationComponent,
     UserManagementComponent,
-    EventManagementComponent
+    EventManagementComponent,
+    EventDetailsDialogComponent,
+    UserDetailsDialogComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    CommonModule,
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
@@ -84,7 +92,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSortModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDialogModule,
+    MatDividerModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

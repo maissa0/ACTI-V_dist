@@ -6,20 +6,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.evennement.entity.Partcipation;
 import tn.esprit.evennement.services.AuthService;
-import tn.esprit.evennement.services.ParticipationService;
+import tn.esprit.evennement.services.ParticipationServiceImpl;
 
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/participations")
 public class ParticipationController {
 
-    private final ParticipationService participationService;
+    private final ParticipationServiceImpl participationService;
     private final AuthService authService;
 
     @Autowired
-    public ParticipationController(ParticipationService participationService, AuthService authService) {
+    public ParticipationController(ParticipationServiceImpl participationService, AuthService authService) {
         this.participationService = participationService;
         this.authService = authService;
     }

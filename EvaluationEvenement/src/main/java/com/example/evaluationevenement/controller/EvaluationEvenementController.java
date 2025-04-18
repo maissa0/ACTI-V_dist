@@ -1,6 +1,7 @@
 package com.example.evaluationevenement.controller;
 
 import com.example.evaluationevenement.Entity.EvaluationEvenement;
+import com.example.evaluationevenement.clients.UserAuthClient;
 import com.example.evaluationevenement.service.EvaluationEvenementService;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -17,8 +18,10 @@ import java.util.Optional;
 public class EvaluationEvenementController {
     private final EvaluationEvenementService service;
 
-    public EvaluationEvenementController(EvaluationEvenementService service) {
+    private final UserAuthClient userAuthClient;
+    public EvaluationEvenementController(EvaluationEvenementService service, UserAuthClient userAuthClient) {
         this.service = service;
+        this.userAuthClient = userAuthClient;
     }
 
     private Long getCurrentUserId() {
@@ -50,26 +53,21 @@ public class EvaluationEvenementController {
 
     @PostMapping("/evenement/{evenementId}/create")
     public EvaluationEvenement createEvenementWithIdFromPath(
-            @PathVariable Long evenementId, 
-            @RequestBody EvaluationEvenement evaluation) {
-        Long userId = getCurrentUserId();
-        if (userId != null) {
-            return service.saveEvenement(evaluation, evenementId, userId);
-        }
-        try {
-            evaluation.setEvenementId(evenementId);
-        } catch (Exception e) {
-            try {
-                java.lang.reflect.Field field = EvaluationEvenement.class.getDeclaredField("evenementId");
-                field.setAccessible(true);
-                field.set(evaluation, evenementId);
-            } catch (Exception ex) {
-                System.err.println("Error setting evenementId: " + ex.getMessage());
-            }
-        }
-        return service.saveEvenement(evaluation);
-    }
+            @PathVariable Long evenementId,
+            @RequestBody EvaluationEvenement evaluation,
+            @RequestHeader("Authorization") String token) {
 
+        Long userId = evaluation.getUserId();
+
+        if (userId == null) {
+            // Utiliser le token pour récupérer l'userId via le client Feign
+            userId = userAuthClient.getUserIdByUsername2(token);
+            evaluation.setUserId(userId);
+        }
+
+        evaluation.setEvenementId(evenementId);
+        return service.saveEvenement(evaluation, evenementId, userId);
+    }
     @GetMapping("/all")
     public List<EvaluationEvenement> getAllEvenements() {
         return service.getAllEvenements();

@@ -15,4 +15,4 @@ public class AuthService {
     public Long validateToken(String token) {
         return userAuthClient.getUserIdByUsername(token);
     }
-} 
+}

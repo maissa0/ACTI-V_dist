@@ -65,6 +65,7 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/login/**")
                         .ignoringRequestMatchers("/api/auth/**")
                         .ignoringRequestMatchers("/api/public/**")
+                        .ignoringRequestMatchers("/api/users/report/**")
         );
 
         http.authorizeHttpRequests((requests)
@@ -84,6 +85,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/companies/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/company/**").hasRole("COMPANY")
                         .requestMatchers("/api/users/username").permitAll()
+                        .requestMatchers("/api/users/report/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> {

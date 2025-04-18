@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class GeminiAiService {
-  private apiUrl = 'http://localhost:8082/api/competence/gemini'; // Base URL for Gemini AI endpoints
+  private apiUrl = 'http://localhost:5000/api/competence/gemini'; // Base URL for Gemini AI endpoints
 
   constructor(
     private http: HttpClient,

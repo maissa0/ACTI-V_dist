@@ -38,9 +38,15 @@ export class ProfileComponent implements OnInit {
   // Competences
   competences: Competence[] = [];
   newCompetence: string = '';
-  selectedLevel: string = 'Intermediate'; // Default level
+  selectedLevel: number = 3; // Default to Intermediate (level 3)
   competenceDescription: string = '';
-  levels: string[] = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
+  levels = [
+    { value: 1, label: 'Beginner' },
+    { value: 2, label: 'Elementary' },
+    { value: 3, label: 'Intermediate' },
+    { value: 4, label: 'Advanced' },
+    { value: 5, label: 'Expert' }
+  ];
   loadingCompetences: boolean = false;
   
   constructor(
@@ -280,7 +286,7 @@ export class ProfileComponent implements OnInit {
               // Reset form fields
               this.newCompetence = '';
               this.competenceDescription = '';
-              this.selectedLevel = 'Intermediate';
+              this.selectedLevel = 3;
             },
             error: (error) => {
               console.error('Error adding competence:', error);

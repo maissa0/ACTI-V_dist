@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import tn.esprit.evennement.clients.UserAuthClient;
 
+
 import java.io.IOException;
 import java.util.Collections;
 
@@ -28,9 +29,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, 
-                                  HttpServletResponse response, 
-                                  FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         try {
             String authHeader = request.getHeader("Authorization");
             logger.debug("Auth header: {}", authHeader);
@@ -42,9 +43,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 if (userId != null) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userId,
-                        null,
-                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+                            userId,
+                            null,
+                            Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
                     );
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);

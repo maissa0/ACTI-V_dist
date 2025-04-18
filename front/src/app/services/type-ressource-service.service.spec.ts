@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TypeRessourceServiceService } from './type-ressource-service.service';
+import { TypeRessourceService } from './type-ressource-service.service';
 
-describe('TypeRessourceServiceService', () => {
-  let service: TypeRessourceServiceService;
+describe('TypeRessourceService', () => {
+  let service: TypeRessourceService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(TypeRessourceServiceService);
+    service = TestBed.inject(TypeRessourceService);
   });
 
   it('should be created', () => {

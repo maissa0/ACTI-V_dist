@@ -29,6 +29,12 @@ public class MissionController {
         return ResponseEntity.ok(createdMission);
     }
 
+    @GetMapping("/event/{eventId}")
+    public ResponseEntity<List<Mission>> getMissionsByEventId(@PathVariable Long eventId) {
+        List<Mission> missions = missionService.getMissionsByEventId(eventId);
+        return ResponseEntity.ok(missions);
+    }
+
 
     @GetMapping("/all")
     public ResponseEntity<List<Mission>> getAllMissions() {

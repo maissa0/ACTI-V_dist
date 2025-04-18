@@ -193,7 +193,7 @@
                     <mat-form-field appearance="outline">
                       <mat-label>Skill level</mat-label>
                       <mat-select [(ngModel)]="selectedLevel">
-                        <mat-option *ngFor="let level of levels" [value]="level">{{ level }}</mat-option>
+                        <mat-option *ngFor="let level of levels" [value]="level.value">{{ level.label }}</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>

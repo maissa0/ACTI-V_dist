@@ -62,4 +62,9 @@ public class MissionService implements MissionInterface {
         equipe.setMission(mission);
         equipeRepository.save(equipe);
     }
+
+    @Override
+    public List<Mission> getMissionsByEventId(Long eventId) {
+        return missionRepository.findByEvenementId(eventId);
+    }
 }

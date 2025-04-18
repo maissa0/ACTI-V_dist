@@ -1,0 +1,76 @@
+<h2 mat-dialog-title>User Details</h2>
+
+<mat-dialog-content>
+  <div class="dialog-content">
+    <div class="section">
+      <h3>Basic Information</h3>
+      <div class="info-row">
+        <span class="label">Username:</span>
+        <span class="value">{{ data.username }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Email:</span>
+        <span class="value">{{ data.email }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">First Name:</span>
+        <span class="value">{{ data.firstName }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Last Name:</span>
+        <span class="value">{{ data.lastName }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Role:</span>
+        <span class="value">{{ data.role }}</span>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="section">
+      <h3>Competences</h3>
+      <div *ngIf="loadingCompetences" class="loading">
+        <mat-spinner diameter="30"></mat-spinner>
+        <span>Loading competences...</span>
+      </div>
+
+      <div *ngIf="!loadingCompetences && competences.length === 0" class="no-data">
+        No competences found for this user.
+      </div>
+
+      <div *ngIf="!loadingCompetences && competences.length > 0" class="competences-list">
+        <mat-card *ngFor="let competence of competences" class="competence-card" [ngClass]="'level-' + (competence.level || 0)">
+          <mat-card-header>
+            <mat-card-title>{{ competence.name }}</mat-card-title>
+            <mat-card-subtitle>Level: {{ competence.level || 'Not specified' }} · {{ getLevelLabel(competence.level) }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content *ngIf="competence.description">
+            <p>{{ competence.description }}</p>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <span class="competence-badge" [ngClass]="'level-' + (competence.level || 0)">{{ getLevelLabel(competence.level) }}</span>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="section actions-section">
+      <h3>Actions</h3>
+      <button mat-raised-button color="primary" (click)="generatePdf()" [disabled]="generatingPdf">
+        <mat-icon>description</mat-icon>
+        Generate PDF Report with AI Summary
+      </button>
+      <div *ngIf="generatingPdf" class="generating-pdf">
+        <mat-spinner diameter="20"></mat-spinner>
+        <span>Generating PDF...</span>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Close</button>
+</mat-dialog-actions> 

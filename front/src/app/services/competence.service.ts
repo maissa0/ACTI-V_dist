@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class CompetenceService {
-  private apiUrl = 'http://localhost:8082/api/competence/competences'; // Update with your competence microservice URL
+  private apiUrl = 'http://localhost:5000/api/competence/competences'; // Update with your competence microservice URL
 
   constructor(
     private http: HttpClient,

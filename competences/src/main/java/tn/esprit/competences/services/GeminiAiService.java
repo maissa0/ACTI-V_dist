@@ -78,10 +78,35 @@ public class GeminiAiService {
     }
 
     public String generateCompetenceRecommendations(String userBackground) {
-        return "Competence recommendations";
+        try {
+            String prompt = String.format(
+                "Based on the following background information, provide a professional paragraph summary about what kind of person this person would be " +
+                "highlighting the key strengths and professional profile: %s",
+                userBackground
+            );
+            
+            logger.info("Generating competence recommendations for: {}", userBackground);
+            String result = generateContent(prompt);
+            logger.info("Generated recommendations: {}", result);
+            
+            return result;
+        } catch (Exception e) {
+            logger.error("Error generating competence recommendations", e);
+            return "Unable to generate AI summary at this time.";
+        }
     }
 
     public String analyzeCompetenceDescription(String competenceDescription) {
-        return "Competence description";
+        try {
+            String prompt = String.format(
+                "Analyze this competence description and provide constructive feedback on how to improve it: %s",
+                competenceDescription
+            );
+            
+            return generateContent(prompt);
+        } catch (Exception e) {
+            logger.error("Error analyzing competence description", e);
+            return "Unable to analyze competence description at this time.";
+        }
     }
 }

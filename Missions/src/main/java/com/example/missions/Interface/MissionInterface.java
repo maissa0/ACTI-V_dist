@@ -19,4 +19,6 @@ public interface MissionInterface {
 
     void assignMissionToEquipe(Long equipeId, Long missionId);
 
+    List<Mission> getMissionsByEventId(Long eventId);
 }
+

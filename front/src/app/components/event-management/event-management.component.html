@@ -1,6 +1,6 @@
 <div class="event-management-container">
   <div class="header">
-    <h1>My Events</h1>
+    <h1><mat-icon>event</mat-icon> Event Management</h1>
     <div class="header-actions">
       <button mat-raised-button color="primary" (click)="createEvent()">
         <mat-icon>add</mat-icon> Create Event
@@ -23,11 +23,12 @@
         <mat-option value="ongoing">Ongoing</mat-option>
         <mat-option value="past">Past</mat-option>
       </mat-select>
+      <mat-icon matSuffix>filter_list</mat-icon>
     </mat-form-field>
   </div>
   
   <div class="loading-container" *ngIf="isLoading">
-    <mat-spinner diameter="40"></mat-spinner>
+    <mat-spinner diameter="40" color="accent"></mat-spinner>
     <p>Loading events...</p>
   </div>
   
@@ -35,7 +36,9 @@
     <div class="empty-state" *ngIf="filteredEvents.length === 0">
       <mat-icon>event_busy</mat-icon>
       <p>No events found</p>
-      <button mat-stroked-button color="primary" (click)="createEvent()">Create your first event</button>
+      <button mat-raised-button color="primary" (click)="createEvent()">
+        <mat-icon>add</mat-icon> Create your first event
+      </button>
     </div>
     
     <table mat-table [dataSource]="filteredEvents" *ngIf="filteredEvents.length > 0" class="mat-elevation-z2">
@@ -54,9 +57,9 @@
         <th mat-header-cell *matHeaderCellDef>Dates</th>
         <td mat-cell *matCellDef="let event">
           <div class="dates-cell">
-            <div>{{ event.dateDeb | date:'MMM d, y' }}</div>
+            <div><mat-icon class="small-icon">calendar_today</mat-icon> {{ event.dateDeb | date:'MMM d, y' }}</div>
             <div>to</div>
-            <div>{{ event.dateFin | date:'MMM d, y' }}</div>
+            <div><mat-icon class="small-icon">event</mat-icon> {{ event.dateFin | date:'MMM d, y' }}</div>
           </div>
         </td>
       </ng-container>
@@ -83,10 +86,13 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let event">
-          <button mat-icon-button color="primary" matTooltip="Edit" (click)="editEvent(event)">
+          <button mat-icon-button matTooltip="View Details" (click)="viewEventDetails(event)">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Edit Event" (click)="editEvent(event)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" matTooltip="Delete" (click)="deleteEvent(event)">
+          <button mat-icon-button color="warn" matTooltip="Delete Event" (click)="deleteEvent(event)">
             <mat-icon>delete</mat-icon>
           </button>
         </td>
@@ -99,8 +105,11 @@
   
   <div class="event-form-container" *ngIf="isEditMode || currentEventId === null">
     <div class="form-header">
-      <h2>{{ isEditMode ? 'Edit Event' : 'Create New Event' }}</h2>
-      <button mat-icon-button color="warn" (click)="cancelEdit()">
+      <h2>
+        <mat-icon>{{ isEditMode ? 'edit' : 'add_circle' }}</mat-icon>
+        {{ isEditMode ? 'Edit Event' : 'Create New Event' }}
+      </h2>
+      <button mat-icon-button color="warn" matTooltip="Close" (click)="cancelEdit()">
         <mat-icon>close</mat-icon>
       </button>
     </div>
@@ -110,6 +119,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Event Name</mat-label>
           <input matInput formControlName="name" placeholder="Enter event name">
+          <mat-icon matSuffix>title</mat-icon>
           <mat-error *ngIf="eventForm.get('name')?.errors?.['required']">Name is required</mat-error>
           <mat-error *ngIf="eventForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters</mat-error>
         </mat-form-field>
@@ -119,6 +129,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Description</mat-label>
           <textarea matInput formControlName="description" rows="4" placeholder="Describe your event"></textarea>
+          <mat-icon matSuffix>description</mat-icon>
           <mat-error *ngIf="eventForm.get('description')?.errors?.['required']">Description is required</mat-error>
           <mat-error *ngIf="eventForm.get('description')?.errors?.['minlength']">Description must be at least 10 characters</mat-error>
         </mat-form-field>
@@ -152,6 +163,7 @@
             <mat-option value="training">Training</mat-option>
             <mat-option value="other">Other</mat-option>
           </mat-select>
+          <mat-icon matSuffix>category</mat-icon>
           <mat-error *ngIf="eventForm.get('type')?.errors?.['required']">Event type is required</mat-error>
         </mat-form-field>
       </div>
@@ -159,6 +171,7 @@
       <div class="form-actions">
         <button mat-button type="button" (click)="cancelEdit()">Cancel</button>
         <button mat-raised-button color="primary" type="submit" [disabled]="eventForm.invalid">
+          <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
           {{ isEditMode ? 'Update' : 'Create' }}
         </button>
       </div>

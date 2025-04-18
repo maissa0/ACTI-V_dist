@@ -8,6 +8,9 @@ import { BasicUserInfo } from '../../../models/basic-user-info.model';
 import { Competence } from '../../../models/competence.model';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { UserDetailsDialogComponent } from './user-details-dialog/user-details-dialog.component';
 
 @Component({
   selector: 'app-user-management',
@@ -40,7 +43,9 @@ export class UserManagementComponent implements OnInit {
   constructor(
     private userService: UserService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -91,8 +96,18 @@ export class UserManagementComponent implements OnInit {
   }
   
   viewUserDetails(user: BasicUserInfo): void {
-    this.selectedUser = user;
-    this.loadUserCompetences(user);
+    if (!user) return;
+
+    const dialogRef = this.dialog.open(UserDetailsDialogComponent, {
+      width: '800px',
+      data: {
+        username: user.username,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role
+      }
+    });
   }
   
   loadUserCompetences(user: BasicUserInfo): void {
@@ -141,17 +156,26 @@ export class UserManagementComponent implements OnInit {
   
   generatePdf(user: BasicUserInfo): void {
     if (!user || !user.username) {
-      alert('Cannot generate PDF: Invalid user');
+      this.snackBar.open('Cannot generate PDF: Invalid user', 'Close', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
+      });
       return;
     }
     
     this.loading = true;
+    this.snackBar.open('Generating PDF report with AI summary...', 'Close', {
+      duration: 3000
+    });
     
     // Get the user ID using the simple approach
     this.userService.getSimpleUserIdByUsername(user.username).subscribe({
       next: (userId) => {
         if (!userId) {
-          alert('Cannot generate PDF: User ID not available');
+          this.snackBar.open('Cannot generate PDF: User ID not available', 'Close', {
+            duration: 3000,
+            panelClass: ['error-snackbar']
+          });
           this.loading = false;
           return;
         }
@@ -167,23 +191,34 @@ export class UserManagementComponent implements OnInit {
               // Create a link and click it to start the download
               const a = document.createElement('a');
               a.href = url;
-              a.download = `user-report-${user.username}.pdf`;
+              a.download = `${user.username}-report-with-ai-summary.pdf`;
               document.body.appendChild(a);
               a.click();
               
               // Clean up
               window.URL.revokeObjectURL(url);
               document.body.removeChild(a);
+              
+              this.snackBar.open('PDF report generated successfully!', 'Close', {
+                duration: 3000,
+                panelClass: ['success-snackbar']
+              });
             },
             error: (error) => {
               console.error('Error generating PDF:', error);
-              alert('Error generating PDF report. Please try again later.');
+              this.snackBar.open('Error generating PDF report. Please try again later.', 'Close', {
+                duration: 3000,
+                panelClass: ['error-snackbar']
+              });
             }
           });
       },
       error: (error) => {
         console.error('Error getting user ID:', error);
-        alert('Error retrieving user ID for PDF generation');
+        this.snackBar.open('Error retrieving user ID for PDF generation', 'Close', {
+          duration: 3000,
+          panelClass: ['error-snackbar']
+        });
         this.loading = false;
       }
     });

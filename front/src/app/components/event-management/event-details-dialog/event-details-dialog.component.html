@@ -1,0 +1,395 @@
+<h2 mat-dialog-title>
+  <mat-icon>event</mat-icon> Event Details
+</h2>
+
+<mat-dialog-content class="event-details">
+  <div class="main-details">
+    <div class="detail-row">
+      <span class="label">Name:</span>
+      <span class="value">{{ event.name }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Description:</span>
+      <div class="description">{{ event.description }}</div>
+    </div>
+    <div class="detail-row">
+      <span class="label">Type:</span>
+      <span class="value">{{ getEventTypeLabel(event.type) }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Start Date:</span>
+      <span class="value">{{ event.dateDeb | date:'medium' }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">End Date:</span>
+      <span class="value">{{ event.dateFin | date:'medium' }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Status:</span>
+      <span class="value status-badge" [ngClass]="getEventStatus(event).toLowerCase()">{{ getEventStatus(event) }}</span>
+    </div>
+    <div class="detail-row" *ngIf="event.userId">
+      <span class="label">User ID:</span>
+      <span class="value">{{ event.userId }}</span>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Resources Table -->
+  <div class="section-container">
+    <div class="section-header">
+      <h3 class="section-title"><mat-icon>inventory_2</mat-icon> Resources</h3>
+      <button mat-raised-button color="primary" (click)="toggleAddResourceForm()" *ngIf="!showAddResourceForm">
+        <mat-icon>add</mat-icon> Add Resource
+      </button>
+    </div>
+
+    <!-- Add Resource Form -->
+    <div class="add-resource-form" *ngIf="showAddResourceForm">
+      <h4><mat-icon>add_circle</mat-icon> Add New Resource</h4>
+      <form [formGroup]="resourceForm" (ngSubmit)="addResource()">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Resource Name</mat-label>
+            <input matInput formControlName="nom" placeholder="Enter resource name">
+            <mat-error *ngIf="resourceForm.get('nom')?.errors?.['required']">Name is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Resource Type</mat-label>
+            <mat-select formControlName="typeId">
+              <mat-option *ngFor="let type of resourceTypes" [value]="type.id">{{ type.nom }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="resourceForm.get('typeId')?.errors?.['required']">Type is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Quantity</mat-label>
+            <input matInput type="number" min="1" formControlName="quantite">
+            <mat-error *ngIf="resourceForm.get('quantite')?.errors?.['required']">Quantity is required</mat-error>
+            <mat-error *ngIf="resourceForm.get('quantite')?.errors?.['min']">Quantity must be at least 1</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="toggleAddResourceForm()">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="resourceForm.invalid">Add</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="loading-container" *ngIf="isLoading">
+      <mat-spinner diameter="40" color="accent"></mat-spinner>
+      <p>Loading resources...</p>
+    </div>
+
+    <div class="table-container" *ngIf="!isLoading">
+      <table mat-table [dataSource]="resources" class="mat-elevation-z1" *ngIf="resources.length > 0">
+        <!-- Name Column -->
+        <ng-container matColumnDef="nom">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let resource">{{ resource.nom }}</td>
+        </ng-container>
+
+        <!-- Type Column -->
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let resource">{{ resource.type?.nom || 'N/A' }}</td>
+        </ng-container>
+
+        <!-- Quantity Column -->
+        <ng-container matColumnDef="quantite">
+          <th mat-header-cell *matHeaderCellDef>Quantity</th>
+          <td mat-cell *matCellDef="let resource">{{ resource.quantite }}</td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let resource">
+            <button mat-icon-button color="warn" matTooltip="Delete" (click)="deleteResource(resource)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="resourceColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: resourceColumns;"></tr>
+      </table>
+
+      <div class="empty-state" *ngIf="resources.length === 0 && !isLoading">
+        <mat-icon>inventory_2</mat-icon>
+        <p>No resources assigned to this event</p>
+        <button mat-raised-button color="primary" (click)="toggleAddResourceForm()" *ngIf="!showAddResourceForm">
+          <mat-icon>add</mat-icon> Add your first resource
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Missions Table -->
+  <div class="section-container">
+    <div class="section-header">
+      <h3 class="section-title"><mat-icon>assignment</mat-icon> Missions</h3>
+      <button mat-raised-button color="primary" (click)="toggleAddMissionForm()" *ngIf="!showAddMissionForm">
+        <mat-icon>add</mat-icon> Add Mission
+      </button>
+    </div>
+
+    <!-- Add Mission Form -->
+    <div class="add-resource-form" *ngIf="showAddMissionForm">
+      <h4><mat-icon>add_task</mat-icon> Add New Mission</h4>
+      <form [formGroup]="missionForm" (ngSubmit)="addMission()">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Mission Name</mat-label>
+            <input matInput formControlName="nomMission" placeholder="Enter mission name">
+            <mat-icon matSuffix>title</mat-icon>
+            <mat-error *ngIf="missionForm.get('nomMission')?.errors?.['required']">Name is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="3" placeholder="Describe mission details"></textarea>
+            <mat-icon matSuffix>description</mat-icon>
+            <mat-error *ngIf="missionForm.get('description')?.errors?.['required']">Description is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Start Date</mat-label>
+            <input matInput [matDatepicker]="missionDatePicker" formControlName="dateDebut">
+            <mat-datepicker-toggle matSuffix [for]="missionDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #missionDatePicker></mat-datepicker>
+            <mat-error *ngIf="missionForm.get('dateDebut')?.errors?.['required']">Start date is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="statut">
+              <mat-option value="EN_ATTENTE">En Attente</mat-option>
+              <mat-option value="EN_COURS">En Cours</mat-option>
+              <mat-option value="TERMINEE">Terminée</mat-option>
+            </mat-select>
+            <mat-icon matSuffix>flag</mat-icon>
+            <mat-error *ngIf="missionForm.get('statut')?.errors?.['required']">Status is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Required Skills (comma-separated)</mat-label>
+            <input matInput formControlName="competencesRequises" placeholder="e.g. Management, Communication, Technical">
+            <mat-hint>Enter skills separated by commas</mat-hint>
+            <mat-icon matSuffix>school</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Responsible User ID</mat-label>
+            <input matInput type="number" formControlName="responsableId" placeholder="Enter user ID">
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error *ngIf="missionForm.get('responsableId')?.errors?.['required']">Responsible user ID is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="toggleAddMissionForm()">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="missionForm.invalid">
+            <mat-icon>add</mat-icon> Add
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="loading-container" *ngIf="isMissionLoading">
+      <mat-spinner diameter="40" color="accent"></mat-spinner>
+      <p>Loading missions...</p>
+    </div>
+
+    <div class="table-container" *ngIf="!isMissionLoading">
+      <table mat-table [dataSource]="missions" class="mat-elevation-z1" *ngIf="missions.length > 0">
+        <!-- Name Column -->
+        <ng-container matColumnDef="nomMission">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let mission">{{ mission.nomMission }}</td>
+        </ng-container>
+
+        <!-- Description Column -->
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let mission">
+            <span class="truncate-text">{{ mission.description }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Date Column -->
+        <ng-container matColumnDef="dateDebut">
+          <th mat-header-cell *matHeaderCellDef>Start Date</th>
+          <td mat-cell *matCellDef="let mission">{{ mission.dateDebut | date:'mediumDate' }}</td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="statut">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let mission">
+            <span class="status-badge" [ngClass]="getMissionStatusClass(mission.statut)">
+              {{ formatMissionStatus(mission.statut) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let mission">
+            <button mat-icon-button matTooltip="Edit Mission" (click)="editMission(mission)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" matTooltip="Delete Mission" (click)="deleteMission(mission)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="missionColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: missionColumns;"></tr>
+      </table>
+
+      <div class="empty-state" *ngIf="missions.length === 0 && !isMissionLoading">
+        <mat-icon>assignment</mat-icon>
+        <p>No missions assigned to this event</p>
+        <button mat-raised-button color="primary" (click)="toggleAddMissionForm()" *ngIf="!showAddMissionForm">
+          <mat-icon>add</mat-icon> Add your first mission
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Feedback Section -->
+  <div class="section-container">
+    <div class="section-header">
+      <h3 class="section-title"><mat-icon>feedback</mat-icon> Feedback</h3>
+      <div class="rating-summary" *ngIf="ratingStats.count > 0">
+        <div class="average-rating">
+          <span class="average">{{ ratingStats.average | number:'1.1-1' }}</span>
+          <div class="stars">
+            <mat-icon *ngFor="let star of [1, 2, 3, 4, 5]" 
+              [class.filled]="star <= Math.round(ratingStats.average)"
+              [class.half-filled]="star === Math.ceil(ratingStats.average) && ratingStats.average % 1 > 0">
+              star
+            </mat-icon>
+          </div>
+          <span class="count">{{ ratingStats.count }} reviews</span>
+        </div>
+        <div class="rating-bars">
+          <div class="rating-bar" *ngFor="let rating of [5, 4, 3, 2, 1]">
+            <span class="rating-label">{{ rating }}</span>
+            <div class="progress-bar">
+              <div class="progress" [style.width.%]="getRatingPercentage(rating)"></div>
+            </div>
+            <span class="rating-count">{{ ratingStats.distribution[rating] || 0 }}</span>
+          </div>
+        </div>
+      </div>
+      <button mat-raised-button color="primary" (click)="toggleAddFeedbackForm()" 
+        *ngIf="!showAddFeedbackForm && !isFeedbackLoading">
+        <mat-icon>{{ userHasProvidedFeedback ? 'edit' : 'add' }}</mat-icon>
+        {{ userHasProvidedFeedback ? 'Edit Feedback' : 'Add Feedback' }}
+      </button>
+    </div>
+
+    <!-- Add Feedback Form -->
+    <div class="add-feedback-form" *ngIf="showAddFeedbackForm">
+      <h4><mat-icon>{{ userHasProvidedFeedback ? 'edit_note' : 'rate_review' }}</mat-icon> 
+        {{ userHasProvidedFeedback ? 'Edit Your Feedback' : 'Add Your Feedback' }}
+      </h4>
+      <form [formGroup]="feedbackForm" (ngSubmit)="submitFeedback()">
+        <div class="form-row rating-input">
+          <label>Your Rating</label>
+          <div class="star-rating">
+            <button type="button" mat-icon-button *ngFor="let star of [1, 2, 3, 4, 5]" 
+              [color]="feedbackForm.get('note')?.value >= star ? 'accent' : ''"
+              (click)="feedbackForm.get('note')?.setValue(star)">
+              <mat-icon>star</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Your Comment</mat-label>
+            <textarea matInput formControlName="commentaire" rows="4" 
+              placeholder="Share your experience with this event..."></textarea>
+            <mat-error *ngIf="feedbackForm.get('commentaire')?.errors?.['required']">
+              Comment is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="toggleAddFeedbackForm()">Cancel</button>
+          <button *ngIf="userHasProvidedFeedback" mat-button color="warn" type="button" 
+            (click)="deleteFeedback()">
+            <mat-icon>delete</mat-icon> Delete
+          </button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="feedbackForm.invalid">
+            <mat-icon>save</mat-icon> Submit
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="loading-container" *ngIf="isFeedbackLoading">
+      <mat-spinner diameter="40" color="accent"></mat-spinner>
+      <p>Loading feedback...</p>
+    </div>
+
+    <div class="feedback-container" *ngIf="feedback.length > 0">
+      <div class="feedback-item" *ngFor="let item of feedback">
+        <div class="feedback-header">
+          <span class="feedback-author">{{ item.username || 'User #' + item.userId }}</span>
+          <span class="feedback-date">{{ item.date | date:'medium' }}</span>
+          <div class="rating">
+            <mat-icon *ngFor="let star of [1, 2, 3, 4, 5]" [class.filled]="star <= item.note">
+              star
+            </mat-icon>
+          </div>
+        </div>
+        <div class="feedback-content">
+          {{ item.commentaire }}
+        </div>
+      </div>
+    </div>
+    
+    <div class="empty-state" *ngIf="feedback.length === 0 && !isFeedbackLoading">
+      <mat-icon>feedback</mat-icon>
+      <p>No feedback available for this event</p>
+      <button mat-raised-button color="primary" (click)="toggleAddFeedbackForm()" *ngIf="!showAddFeedbackForm">
+        <mat-icon>add</mat-icon> Be the first to leave feedback
+      </button>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="generateReport()">
+    <mat-icon>description</mat-icon> Generate Report
+  </button>
+  <button mat-button (click)="closeDialog()">Close</button>
+</mat-dialog-actions> 

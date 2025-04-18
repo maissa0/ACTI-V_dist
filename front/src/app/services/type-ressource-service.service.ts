@@ -6,8 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class TypeRessourceService {
-  private apiUrl = 'http://localhost:8086/TypeRessource'; // Your Spring Boot API URL
-
+  private apiUrl = 'http://localhost:5000/ressources/TypeRessource'; // Your Spring Boot API URL through gateway
 
   constructor(private http: HttpClient) {}
 

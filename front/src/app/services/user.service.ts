@@ -11,9 +11,9 @@ import { GeminiAiService } from './gemini-ai.service';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://localhost:8081/api/userAuth/api/users';
-  private competenceApiUrl = 'http://localhost:8082/api/competence/competences';
-  private userAuthPublicApi = 'http://localhost:8081/api/userAuth/api/public';
+  private apiUrl = 'http://localhost:5000/api/userAuth/api/users';
+  private competenceApiUrl = 'http://localhost:5000/api/competence/competences';
+  private userAuthPublicApi = 'http://localhost:5000/api/userAuth/api/public';
 
   constructor(
     private http: HttpClient,
@@ -148,5 +148,18 @@ export class UserService {
       'Authorization': authHeader,
       'Content-Type': 'application/json'
     });
+  }
+
+  // Get username by user ID
+  getUsernameById(userId: number): Observable<string> {
+    return this.http.get<string>(
+      `${this.userAuthPublicApi}/username/${userId}`,
+      { responseType: 'text' as 'json' }
+    ).pipe(
+      catchError(error => {
+        console.error('Error getting username by ID:', error);
+        return of(`User ${userId}`); // Return a default value in case of error
+      })
+    );
   }
 }

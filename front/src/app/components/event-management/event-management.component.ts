@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EventService, Event } from '../../services/event.service';
 import { AuthService } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { EventDetailsDialogComponent } from './event-details-dialog/event-details-dialog.component';
 
 @Component({
   selector: 'app-event-management',
@@ -24,7 +26,8 @@ export class EventManagementComponent implements OnInit {
     private eventService: EventService,
     private authService: AuthService,
     private fb: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {
     this.eventForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -252,5 +255,29 @@ export class EventManagementComponent implements OnInit {
     } else {
       return 'ongoing';
     }
+  }
+
+  viewEventDetails(event: Event): void {
+    this.isLoading = true;
+    this.eventService.getEventById(event.id!).subscribe({
+      next: (eventDetails) => {
+        this.isLoading = false;
+        this.openEventDetailsDialog(eventDetails);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.snackBar.open('Failed to load event details: ' + error.message, 'Close', {
+          duration: 3000
+        });
+      }
+    });
+  }
+
+  openEventDetailsDialog(event: Event): void {
+    const dialogRef = this.dialog.open(EventDetailsDialogComponent, {
+      width: '800px',
+      maxWidth: '95vw',
+      data: event
+    });
   }
 } 

@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class AuthService {
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
-  private apiUrl = 'http://localhost:8081/api/userAuth/api'; // Update with your backend URL
+  private apiUrl = 'http://localhost:5000/api/userAuth/api'; // Update with your backend URL
 
   constructor(private http: HttpClient, private router: Router) {
     // Get from localStorage and parse

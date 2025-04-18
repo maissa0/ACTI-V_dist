@@ -68,4 +68,17 @@ public class PublicController {
             return null;
         }
     }
+
+    /**
+     * Get username by user ID
+     * No authentication needed
+     */
+    @GetMapping("/username/{userId}")
+    public String getUsernameById(@PathVariable Long userId) {
+        try {
+            return userDetailsService.getUsernameById(userId);
+        } catch (Exception e) {
+            return "Unknown User";
+        }
+    }
 } 
